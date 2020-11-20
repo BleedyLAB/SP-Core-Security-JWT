@@ -1,4 +1,4 @@
-package ru.studentsplatform.security.security;
+package ru.studentsplatform.security.controllers;
 
 import ru.studentsplatform.security.jwtsecurity.JwtTokenProvider;
 import ru.studentsplatform.security.model.User;
@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import ru.studentsplatform.security.security.AuthenticationDTO;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -24,8 +25,8 @@ import java.util.Map;
 @RequestMapping("/api/auth")
 public class AuthenticationRestController {
     public final AuthenticationManager authenticationManager;
-    private  UserRepository userRepository;
-    private  JwtTokenProvider jwtTokenProvider;
+    private UserRepository userRepository;
+    private JwtTokenProvider jwtTokenProvider;
 
 
     public AuthenticationRestController(AuthenticationManager authenticationManager, UserRepository userRepository, JwtTokenProvider jwtTokenProvider) {
