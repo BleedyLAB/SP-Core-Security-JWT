@@ -14,16 +14,14 @@ import ru.studentsplatform.security.service.UserDetailService;
 @RestController
 @RequestMapping("/register")
 public class RegisterController {
-@Autowired
-private UserRepository userRepository;
-@Autowired
-private UserDetailService userDetailService;
+	@Autowired
+	private UserDetailService userDetailService;
 
-    @PostMapping
-    public ResponseEntity<?> register(@RequestBody User user){
-        if(userDetailService.saveUser(user)){
-            return new ResponseEntity<>("Register sucsess", HttpStatus.ACCEPTED);
-        }
-        return new ResponseEntity<>("FAIL",HttpStatus.BAD_REQUEST);
-    }
+	@PostMapping
+	public ResponseEntity<?> register(@RequestBody User user) {
+		if (userDetailService.saveUser(user)) {
+			return new ResponseEntity<>("Register sucsess", HttpStatus.ACCEPTED);
+		}
+		return new ResponseEntity<>("FAIL", HttpStatus.BAD_REQUEST);
+	}
 }

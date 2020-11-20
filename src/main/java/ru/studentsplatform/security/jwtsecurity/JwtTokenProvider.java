@@ -1,6 +1,10 @@
 package ru.studentsplatform.security.jwtsecurity;
 
-import io.jsonwebtoken.*;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
+import io.jsonwebtoken.JwtException;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -18,58 +22,57 @@ import java.util.Date;
 @Component
 public class JwtTokenProvider {
 
-    private final UserDetailsService userDetailsService;
+	private final UserDetailsService userDetailsService;
 
-    @Value("${jwt.header}")
-    private String header;
-    @Value("${jwt.secret}")
-    private String secretKey;
-    @Value("${jwt.expiration}")
-    private long validityInMilliSeconds;
+	@Value("${jwt.header}")
+	private String header;
+	@Value("${jwt.secret}")
+	private String secretKey;
+	@Value("${jwt.expiration}")
+	private long validityInMilliSeconds;
 
-    public JwtTokenProvider(@Qualifier("userDetailServiceImp") UserDetailsService userDetailsService) {
-        this.userDetailsService = userDetailsService;
-    }
+	public JwtTokenProvider(@Qualifier("userDetailServiceImp") UserDetailsService userDetailsService) {
+		this.userDetailsService = userDetailsService;
+	}
 
-    @PostConstruct
-    protected void init() {
-        secretKey = Base64.getEncoder().encodeToString(secretKey.getBytes());
-    }
+	@PostConstruct
+	protected void init() {
+		secretKey = Base64.getEncoder().encodeToString(secretKey.getBytes());
+	}
 
 
+	public String createTokens(String userName, String role) {
+		Claims claims = Jwts.claims().setSubject(userName);
+		claims.put("role", role);
+		Date now = new Date();
+		Date validity = new Date(now.getTime() + validityInMilliSeconds);
+		return Jwts.builder().setClaims(claims)
+				.setIssuedAt(now)
+				.setExpiration(validity)
+				.signWith(SignatureAlgorithm.HS256, secretKey)
+				.compact();
+	}
 
-    public String createTokens(String userName, String role) {
-        Claims claims = Jwts.claims().setSubject(userName);
-        claims.put("role", role);
-        Date now = new Date();
-        Date validity = new Date(now.getTime() + validityInMilliSeconds);
-        return Jwts.builder().setClaims(claims)
-                .setIssuedAt(now)
-                .setExpiration(validity)
-                .signWith(SignatureAlgorithm.HS256, secretKey)
-                .compact();
-    }
+	public boolean validateToken(String token) {
+		try {
+			Jws<Claims> claimsJws = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token);
+			return !claimsJws.getBody().getExpiration().before(new Date());
+		} catch (JwtException | IllegalArgumentException e) {
+			throw new JwtAuthException("Jwt token is expired or invalid", HttpStatus.UNAUTHORIZED);
+		}
+	}
 
-    public boolean validateToken(String token) {
-        try {
-            Jws<Claims> claimsJws = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token);
-            return !claimsJws.getBody().getExpiration().before(new Date());
-        } catch (JwtException | IllegalArgumentException e) {
-            throw new JwtAuthException("Jwt token is expired or invalid", HttpStatus.UNAUTHORIZED);
-        }
-    }
+	public Authentication getAuthentication(String token) {
+		UserDetails userDetails = this.userDetailsService.loadUserByUsername(getUserName(token));
+		return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
+	}
 
-    public Authentication getAuthentication(String token){
-        UserDetails userDetails = this.userDetailsService.loadUserByUsername(getUserName(token));
-        return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
-    }
+	public String getUserName(String token) {
+		return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().getSubject();
+	}
 
-    public String getUserName(String token){
-        return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().getSubject();
-    }
-
-    public String resolveToken(HttpServletRequest request) {
-        return request.getHeader(header);
-    }
+	public String resolveToken(HttpServletRequest request) {
+		return request.getHeader(header);
+	}
 
 }

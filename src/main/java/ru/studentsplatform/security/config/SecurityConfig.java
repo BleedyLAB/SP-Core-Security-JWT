@@ -1,6 +1,5 @@
 package ru.studentsplatform.security.config;
 
-import ru.studentsplatform.security.jwtsecurity.JwtConfigurer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -11,42 +10,43 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import ru.studentsplatform.security.jwtsecurity.JwtConfigurer;
 
-@Configuration
+@Configuration // вроде можно удалить
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true)
+@EnableGlobalMethodSecurity(prePostEnabled = true) // todo зачем?
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-    private final JwtConfigurer jwtConfigurer;
+	private final JwtConfigurer jwtConfigurer;
 
-    public SecurityConfig(JwtConfigurer jwtConfigurer) {
-        this.jwtConfigurer = jwtConfigurer;
-    }
+	public SecurityConfig(JwtConfigurer jwtConfigurer) {
+		this.jwtConfigurer = jwtConfigurer;
+	}
 
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        http
-                .csrf().disable()
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and()
-                .authorizeRequests()
-                .antMatchers("/").permitAll()
-                .antMatchers("/login").permitAll()
-                .antMatchers("/api/auth/login").permitAll()
-                .antMatchers("/register").permitAll()
-                .anyRequest()
-                .authenticated()
-                .and()
-                .apply(jwtConfigurer);
-    }
+	@Override
+	protected void configure(HttpSecurity http) throws Exception {
+		http
+				.csrf().disable()
+				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+				.and()
+				.authorizeRequests()
+				.antMatchers("/").permitAll()
+				.antMatchers("/login").permitAll()
+				.antMatchers("/api/auth/login").permitAll()
+				.antMatchers("/register").permitAll()
+				.anyRequest()
+				.authenticated()
+				.and()
+				.apply(jwtConfigurer);
+	}
 
-    @Bean
-    protected PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder(12);
-    }
+	@Bean
+	protected PasswordEncoder passwordEncoder() {
+		return new BCryptPasswordEncoder(12);
+	}
 
-    @Bean
-    @Override
-    public AuthenticationManager authenticationManagerBean() throws Exception {
-        return super.authenticationManagerBean();
-    }
+	@Bean
+	@Override
+	public AuthenticationManager authenticationManagerBean() throws Exception {
+		return super.authenticationManagerBean();
+	}
 }
