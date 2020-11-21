@@ -32,4 +32,17 @@ public class User {
 	private LocalDateTime localDateTime;
 	@Column(name = "status")
 	private boolean status;
+
+	@Override
+	public String toString() {
+		return "User{" +
+				"id=" + id +
+				", name='" + name + '\'' +
+				", email='" + email + '\'' +
+				", password='" + password + '\'' +
+				", role=" + role +
+				", localDateTime=" + localDateTime +
+				", status=" + status +
+				'}';
+	}
 }

@@ -13,6 +13,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
+import ru.studentsplatform.security.service.UserService;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
@@ -22,7 +23,7 @@ import java.util.Date;
 @Component
 public class JwtTokenProvider {
 
-	private final UserDetailsService userDetailsService;
+	private final UserService userService;
 
 	@Value("${jwt.header}")
 	private String header;
@@ -31,8 +32,8 @@ public class JwtTokenProvider {
 	@Value("${jwt.expiration}")
 	private long validityInMilliSeconds;
 
-	public JwtTokenProvider(@Qualifier("userDetailServiceImp") UserDetailsService userDetailsService) {
-		this.userDetailsService = userDetailsService;
+	public JwtTokenProvider(UserService userService) {
+		this.userService = userService;
 	}
 
 	@PostConstruct
@@ -63,7 +64,7 @@ public class JwtTokenProvider {
 	}
 
 	public Authentication getAuthentication(String token) {
-		UserDetails userDetails = this.userDetailsService.loadUserByUsername(getUserName(token));
+		UserDetails userDetails = this.userService.loadUserByUsername(getUserName(token));
 		return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
 	}
 
