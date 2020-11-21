@@ -16,12 +16,12 @@ import java.util.Optional;
 
 
 @Service
-public class UserDetailService implements UserDetailsService {
+public class UserDetailServiceImpl implements UserDetailsService {
 
 	private final UserRepository userRepository;
 
 	@Autowired
-	public UserDetailService(UserRepository userRepository) {
+	public UserDetailServiceImpl(UserRepository userRepository) {
 		this.userRepository = userRepository;
 	}
 
