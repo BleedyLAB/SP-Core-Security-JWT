@@ -8,14 +8,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.studentsplatform.security.model.User;
-import ru.studentsplatform.security.repository.UserRepository;
-import ru.studentsplatform.security.service.UserDetailService;
+import ru.studentsplatform.security.service.UserDetailServiceImpl;
 
 @RestController
 @RequestMapping("/register")
 public class RegisterController {
 	@Autowired
-	private UserDetailService userDetailService;
+	private UserDetailServiceImpl userDetailService;
 
 	@PostMapping
 	public ResponseEntity<?> register(@RequestBody User user) {
