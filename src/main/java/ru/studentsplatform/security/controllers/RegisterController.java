@@ -12,7 +12,7 @@ import ru.studentsplatform.security.model.User;
 import ru.studentsplatform.security.service.UserService;
 
 @RestController
-@RequestMapping("/register")
+@RequestMapping("/api/register")
 public class RegisterController {
 
 	private final UserService userService;

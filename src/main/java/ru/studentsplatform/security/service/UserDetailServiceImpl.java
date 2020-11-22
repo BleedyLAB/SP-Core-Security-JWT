@@ -12,6 +12,7 @@ import ru.studentsplatform.security.model.Role;
 import ru.studentsplatform.security.model.User;
 import ru.studentsplatform.security.repository.UserRepository;
 
+import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
