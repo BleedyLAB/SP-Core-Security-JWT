@@ -1,6 +1,5 @@
-package ru.studentsplatform.security.jwtsecurity;
+package ru.studentsplatform.security.security;
 
-import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -9,7 +8,7 @@ import ru.studentsplatform.security.model.User;
 import java.util.Collection;
 import java.util.List;
 
-@Data
+
 public class SecurityUser implements UserDetails {
 	private final String username;
 	private final String password;
@@ -68,4 +67,9 @@ public class SecurityUser implements UserDetails {
 	public boolean isEnabled() {
 		return isActive;
 	}
+
+	public boolean isActive() {
+		return isActive;
+	}
+
 }

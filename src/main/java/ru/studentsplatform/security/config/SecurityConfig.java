@@ -12,9 +12,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import ru.studentsplatform.security.jwtsecurity.JwtConfigurer;
 
-@Configuration // вроде можно удалить
-@EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true) // todo зачем?
+@EnableWebSecurity // Позволяет конфигурировать через HttpSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true) // Включает анотации @PreAuthorize и @PostAuthorize
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	private final JwtConfigurer jwtConfigurer;
 
@@ -25,10 +24,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http
-				.csrf().disable()
-				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+				.csrf().disable()// Отключаем csrf token
+				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS) // Отключаем автомотическую авторизацию
 				.and()
-				.authorizeRequests()
+				.authorizeRequests() // Выставояем пути и ограничения для пользователей
 				.antMatchers("/").permitAll()
 				.antMatchers("/login").permitAll()
 				.antMatchers("/api/auth/login").permitAll()
@@ -36,10 +35,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				.anyRequest()
 				.authenticated()
 				.and()
-				.apply(jwtConfigurer);
+				.apply(jwtConfigurer);// Добавляем jwt token
 	}
 
-	@Bean
+	@Bean // Создаем бины BCrypt энкодера для проверки паролей
 	protected PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder(12);
 	}

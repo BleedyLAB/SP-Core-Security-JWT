@@ -25,7 +25,7 @@ public class RegisterController {
 	@PostMapping
 	public ResponseEntity<?> register(@RequestBody User user) {
 		if (userService.saveUser(user)) {
-			return new ResponseEntity<>("Register sucsess", HttpStatus.ACCEPTED);
+			return new ResponseEntity<>("Register success", HttpStatus.ACCEPTED);
 		}
 		return new ResponseEntity<>("FAIL", HttpStatus.BAD_REQUEST);
 	}

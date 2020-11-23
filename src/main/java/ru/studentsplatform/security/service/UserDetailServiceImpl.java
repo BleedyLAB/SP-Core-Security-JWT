@@ -1,18 +1,15 @@
 package ru.studentsplatform.security.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import ru.studentsplatform.security.jwtsecurity.SecurityUser;
+import ru.studentsplatform.security.security.SecurityUser;
 import ru.studentsplatform.security.model.Role;
 import ru.studentsplatform.security.model.User;
 import ru.studentsplatform.security.repository.UserRepository;
 
-import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;

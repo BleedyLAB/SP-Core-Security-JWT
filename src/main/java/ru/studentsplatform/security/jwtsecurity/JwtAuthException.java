@@ -1,20 +1,29 @@
 package ru.studentsplatform.security.jwtsecurity;
 
-import lombok.Getter;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.AuthenticationException;
 
-@Getter
+/**
+ * Создаем обработчик ошибок в случае неверного токена
+ */
 public class JwtAuthException extends AuthenticationException {
-	private HttpStatus httpStatus;
+    private HttpStatus httpStatus;
 
+    public JwtAuthException(String msg, HttpStatus httpStatus) {
+        super(msg);
+        this.httpStatus = httpStatus;
+    }
 
-	public JwtAuthException(String msg, HttpStatus httpStatus) {
-		super(msg);
-		this.httpStatus = httpStatus;
-	}
+    public HttpStatus getHttpStatus() {
+        return httpStatus;
+    }
 
-	public JwtAuthException(String msg) {
-		super(msg);
-	}
+    public void setHttpStatus(HttpStatus httpStatus) {
+        this.httpStatus = httpStatus;
+    }
+
+    public JwtAuthException(String msg) {
+        super(msg);
+    }
 }

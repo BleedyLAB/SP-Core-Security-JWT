@@ -25,8 +25,8 @@ import java.util.Map;
 @RequestMapping("/api/auth")
 public class AuthenticationRestController {
 	public final AuthenticationManager authenticationManager;
-	private UserRepository userRepository; // final ?
-	private JwtTokenProvider jwtTokenProvider; // final ?
+	private final UserRepository userRepository;
+	private final JwtTokenProvider jwtTokenProvider;
 
 
 	public AuthenticationRestController(AuthenticationManager authenticationManager, UserRepository userRepository, JwtTokenProvider jwtTokenProvider) {
