@@ -23,6 +23,10 @@ public class JwtTokenProvider {
 
 	private final UserService userService;
 
+
+    /**
+     * Данные полей храняться в application.properties
+     */
 	@Value("${jwt.header}")
 	private String header;
 	@Value("${jwt.secret}")
@@ -41,14 +45,14 @@ public class JwtTokenProvider {
 
 
 	public String createTokens(String userName, String role) {
-		Claims claims = Jwts.claims().setSubject(userName);
+		Claims claims = Jwts.claims().setSubject(userName); // Мапа для дополнительных данных, необходимых для генерации токена 
 		claims.put("role", role);
 		Date now = new Date();
 		Date validity = new Date(now.getTime() + validityInMilliSeconds);
-		return Jwts.builder().setClaims(claims)
-				.setIssuedAt(now)
-				.setExpiration(validity)
-				.signWith(SignatureAlgorithm.HS256, secretKey)
+		return Jwts.builder().setClaims(claims) // Передаем в билдер класс созданый выше
+				.setIssuedAt(now) // Дата создания токена
+				.setExpiration(validity) // Срок годности токена 
+				.signWith(SignatureAlgorithm.HS256, secretKey) // Настройка шифрования 
 				.compact();
 	}
 
